@@ -1,4 +1,4 @@
-const initialState = { setlist: [] }
+const initialState = { setlist: [], editMode: false }
 
 function setlistReducer(state = initialState, action) {
   let nextState
@@ -24,9 +24,16 @@ function setlistReducer(state = initialState, action) {
         setlist: action.value
       }
       return nextState || state
+    case 'TOGGLE_EDITMODE':
+      nextState={
+        ...state,
+        editMode:!state.editMode
+      }
+      return nextState || state
   default:
     return state
   }
 }
 
 export default setlistReducer
+
