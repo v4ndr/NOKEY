@@ -10,4 +10,10 @@ The transcription of the songs is in progress.
 
 French version.
 
-# SCRENSHOTS
+# DEVELOPMENT
+
+App built with react-native.
+
+# DEMO
+
+Demonstration app available on <a href="https://expo.io/@vandr/projects/nokey">EXPO</a>
