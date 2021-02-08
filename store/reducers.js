@@ -1,4 +1,4 @@
-const initialState = { setlist: [], editMode: false }
+const initialState = { setlist: [], editMode: false, checkedItem : [] }
 
 function setlistReducer(state = initialState, action) {
   let nextState
@@ -30,6 +30,15 @@ function setlistReducer(state = initialState, action) {
         editMode:!state.editMode
       }
       return nextState || state
+    // case 'DELETE_ITEMS':
+    //   state.checkedItem.forEach(item=>{
+    //     state.setlist.indexOf(item)
+    //   })
+    //   nextState={
+    //     ...state,
+    //     editMode:!state.editMode
+    //   }
+    //   return nextState || state
   default:
     return state
   }
