@@ -18,4 +18,4 @@ App built with react-native.
 
 Demonstration app available on <a href="https://expo.io/@vandr/projects/nokey">EXPO</a>
 
-[img]https://i.imgur.com/pyfAwzl.gif[/img]
+[Imgur](https://imgur.com/pyfAwzl.gif)
