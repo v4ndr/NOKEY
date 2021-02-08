@@ -18,4 +18,4 @@ App built with react-native.
 
 Demonstration app available on <a href="https://expo.io/@vandr/projects/nokey">EXPO</a>
 
-<a href="//imgur.com/a/nZg0dUO"></a>
+<blockquote class="imgur-embed-pub" lang="en" data-id="pyfAwzl"><a href="https://imgur.com/pyfAwzl">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
