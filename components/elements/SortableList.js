@@ -1,17 +1,17 @@
 import React, {Component} from 'react'
 import {Dimensions, StyleSheet, ScrollView, View, Animated, Button} from 'react-native'
 import {DragSortableView} from 'react-native-drag-sort'
-import {connect} from 'react-redux'
+import {connect, useSelector} from 'react-redux'
 import {ListItem} from 'react-native-elements'
 import {Icon} from 'react-native-elements'
 import songs from '../../data/songs.json'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import PlayButton from './PlayButton'
 
 const {width} = Dimensions.get('window')
 const parentWidth = width
 const childrenWidth = width
 const childrenHeight = 48
+
 
 class SortableList extends Component{
 
@@ -20,41 +20,9 @@ class SortableList extends Component{
 
         this.state = {
             scrollEnabled: true,
-            data: props.setlist,
-            editMode: false,
             animWidth: new Animated.Value(0),
-            checkedItems: [],
-            fake: false
         }
     }
-
-    toggleEdit() {
-        if(!this.state.editMode){
-            Animated.timing(this.state.animWidth, {toValue:30, duration: 500, useNativeDriver:false}).start()
-            this.props.nav.setOptions({headerRight:()=>{
-                return(
-                <Button
-                    title='Annuler'
-                    onPress={()=>this.toggleEdit()}
-                    />
-                )
-            }})
-        }
-        else{
-            Animated.timing(this.state.animWidth, {toValue:0, duration: 500, useNativeDriver:false}).start()
-            this.props.nav.setOptions({headerRight:()=>{
-                return(
-                <Button
-                    title='Modifier'
-                    onPress={()=>this.toggleEdit()}
-                    />
-                )
-            }})
-        }
-        this.setState({editMode:!this.state.editMode})
-        this.props.dispatch({type:"TOGGLE_EDITMODE"})
-    }
-
     componentDidMount() {
         this.props.nav.setOptions({headerRight:()=>{
             return(
@@ -66,8 +34,48 @@ class SortableList extends Component{
         }})
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.editMode !== prevProps.editMode && !this.props.editMode) {
+            Animated.timing(this.state.animWidth, {toValue:0, duration: 500, useNativeDriver:false}).start()
+            this.props.nav.setOptions({headerRight:()=>{
+                return(
+                    <Button
+                        title='Modifier'
+                        onPress={()=>this.toggleEdit()}
+                        />
+                    )
+            }})
+        }
+    }
+    
+    toggleEdit() {
+        if(!this.props.editMode){
+            Animated.timing(this.state.animWidth, {toValue:30, duration: 500, useNativeDriver:false}).start()
+            this.props.nav.setOptions({headerRight:()=>{
+                return(
+                    <Button
+                        title='Annuler'
+                        onPress={()=>this.toggleEdit()}
+                        />
+                    )
+            }})
+        }
+        else{
+            Animated.timing(this.state.animWidth, {toValue:0, duration: 500, useNativeDriver:false}).start()
+            this.props.nav.setOptions({headerRight:()=>{
+                return(
+                    <Button
+                        title='Modifier'
+                        onPress={()=>this.toggleEdit()}
+                        />
+                    )
+            }})
+        }
+        this.props.dispatch({type:"TOGGLE_EDITMODE"})
+    }
+
     displayCheck(item) {
-        if(this.state.checkedItems.includes(item)){
+        if(this.props.checkedItem.includes(item)){
             return(
                 <Icon
                     name="check-circle"
@@ -90,17 +98,8 @@ class SortableList extends Component{
     }
 
     checkItem(item) {
-        if(this.state.editMode){
-        this.setState(state=>{
-            if(state.checkedItems.includes(item)){
-                state.checkedItems.splice(state.checkedItems.indexOf(item), 1)
-            }
-            else{
-                state.checkedItems.push(item)
-            }
-            
-        })
-        this.setState({ state: this.state })
+        if(this.props.editMode){
+            this.props.dispatch({type: 'TOGGLE_CHECK_ITEM', value: item})
         }
     }
 
@@ -112,7 +111,7 @@ class SortableList extends Component{
                 scrollEnabled = {this.state.scrollEnabled}
                 style={styles.container}>
                 <DragSortableView
-                    sortable={this.state.editMode}
+                    sortable={this.props.editMode}
                     dataSource={this.props.setlist}
                     delayLongPress={200}
                     isDragFreely={false}
@@ -131,10 +130,8 @@ class SortableList extends Component{
                         })
                     }}
                     onDataChange = {(data)=>{
-                        if (data.length != this.state.data.length) {
-                            this.setState({
-                                data: data
-                            })
+                        if (data.length != this.props.setlist.length) {
+                            this.props.dispatch({type:"NEW_SETLIST",value:data})
                         }
                         this.props.dispatch({type:"NEW_SETLIST",value:data})
                     }}
@@ -191,7 +188,9 @@ const styles = StyleSheet.create({
 
 const mapStateToPops= (state) => {
     return{
-        setlist: state.setlist
+        setlist: state.setlist,
+        checkedItem: state.checkedItem,
+        editMode: state.editMode,
     }
 }
 

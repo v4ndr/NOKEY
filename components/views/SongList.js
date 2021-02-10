@@ -12,9 +12,8 @@ const closeRow = (rowMap, rowKey) => {
     }
 }
 
-const BtnIcon = (id) => {
-    const setlist = useSelector(state=>state.setlist)
-    if(setlist.includes(id.id)){
+const BtnIcon = (props) => {
+    if(props.setlist.includes(props.id)){
         return(
             <Icon
                 name="check-circle"
@@ -36,21 +35,32 @@ const BtnIcon = (id) => {
     }
 
 }
-
-const renderHiddenItem = (data, rowMap, dispatch) => {
-    
+const Actions = (props) => {
+    return(
+        <View style={[
+            styles.btn, 
+            props.setlist.includes(props.id) && {backgroundColor:'lightgreen'},
+            props.rightActionActivated && props.setlist.includes(props.id) && {backgroundColor:'#ffef61'},
+            props.rightActionActivated && !props.setlist.includes(props.id) && {backgroundColor:'lightgreen'},
+            
+            ]}>
+            <Text style={styles.btnText}>Ajouter</Text>
+        </View>
+    )
+}
+const renderHiddenItem = (item, romMap, setlist) => {
     return (
-        <ListItem button onPress={()=>{dispatch({type: "TOGGLE_SETLIST", value: data.item.id}); closeRow(rowMap, data.item.id)}} bottomDivider containerStyle={styles.hiddenRow}>
-            <ListItem.Content style={styles.btn}>
-                    <BtnIcon id={data.item.id}/>
-            </ListItem.Content>
-        </ListItem>
+        <Actions id={item.id} setlist={setlist}/>
+        // <ListItem bottomDivider containerStyle={styles.hiddenRow}>
+        //     <ListItem.Content style={styles.btn}>
+        //             <BtnIcon id={item.id} setlist={setlist}/>
+        //     </ListItem.Content>
+        // </ListItem>
     )
 }
 
-const TitleLabel = (id) => {
-    const setlist = useSelector(state=>state.setlist)
-    if(setlist.includes(id.id)){
+const TitleLabel = (props) => {
+    if(props.setlist.includes(props.id)){
         return(
             <Icon
                 name="circle"
@@ -69,33 +79,37 @@ const TitleLabel = (id) => {
     }
 }
 
-const renderItem = ({item}) => {
+const renderItem = ({item}, setlist) => {
     return(
         <ListItem bottomDivider>
             <ListItem.Content style={styles.item}>
                 <Text style={styles.itemText}>
                     {item.title}
                 </Text>
-                <TitleLabel id={item.id}/>
+                <TitleLabel id={item.id} setlist={setlist}/>
             </ListItem.Content>
         </ListItem>
     )
 }
-
 const SongList = () => {
     const dispatch = useDispatch()
+    const setlist = useSelector(state=>state.setlist)
     return (
         <View style={styles.container}>
             <SwipeListView
                 data={songs}
-                renderItem={renderItem}
-                renderHiddenItem={(rowData, rowMap)=>renderHiddenItem(rowData, rowMap, dispatch)}
-                rightOpenValue={-58}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={(item) => renderItem(item, setlist)}
+                renderHiddenItem={({item, index}, romMap)=>renderHiddenItem(item, romMap, setlist)}
                 previewRowKey={'3'}
                 previewOpenValue={-40}
                 previewOpenDelay={1000}
-                keyExtractor={(item) => item.id.toString()}
                 disableRightSwipe={true}
+                rightOpenValue={0}
+                rightActivationValue={-80}
+                rightActionValue={0}
+                onRightAction={(rowKey)=>dispatch({type:'TOGGLE_SETLIST', value:parseInt(rowKey)})}
+                onRightActionStatusChange={()=>{}}
             />
         </View>
     );
@@ -119,7 +133,10 @@ const styles = StyleSheet.create({
     btn: {
         flexDirection:'row',
         justifyContent:'flex-end',
-        alignItems:'center'
+        alignItems:'center',
+        paddingHorizontal:8,
+        flex:1,
+        backgroundColor:'#ffef61'
 
     },
     btnIcon:{

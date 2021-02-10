@@ -2,10 +2,11 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {FAB} from 'react-native-paper'
 import * as RootNavigation from '../../navigation/RootNavigation';
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 
 const PlayButton = () => {
     const editMode = useSelector(state=>state.editMode)
+    const dispatch = useDispatch()
     if(!editMode){
         return (
             <FAB
@@ -20,7 +21,10 @@ const PlayButton = () => {
             <FAB
                 style={[styles.fab, styles.del]}
                 icon="delete"
-                onPress={() =>console.log('del')}
+                onPress={() => {
+                    dispatch({type: 'DELETE_ITEMS'})
+                    dispatch({type:'DISABLE_EDITMODE'})
+            }}
             />
         )
     }

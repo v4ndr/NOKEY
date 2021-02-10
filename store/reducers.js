@@ -1,4 +1,4 @@
-const initialState = { setlist: [], editMode: false, checkedItem : [] }
+const initialState = { setlist: [], editMode: false, checkedItem : []}
 
 function setlistReducer(state = initialState, action) {
   let nextState
@@ -27,18 +27,37 @@ function setlistReducer(state = initialState, action) {
     case 'TOGGLE_EDITMODE':
       nextState={
         ...state,
-        editMode:!state.editMode
+        editMode:!state.editMode,
       }
       return nextState || state
-    // case 'DELETE_ITEMS':
-    //   state.checkedItem.forEach(item=>{
-    //     state.setlist.indexOf(item)
-    //   })
-    //   nextState={
-    //     ...state,
-    //     editMode:!state.editMode
-    //   }
-    //   return nextState || state
+      case 'DISABLE_EDITMODE':
+        nextState={
+          ...state,
+          editMode:false,
+        }
+        return nextState || state
+    case 'TOGGLE_CHECK_ITEM':
+      const itemIndex = state.checkedItem.findIndex(item => item === action.value)
+      if(itemIndex !== -1){
+        nextState = {
+          ...state,
+          checkedItem: state.checkedItem.filter( (item, index) => index !== itemIndex)
+        }
+      }
+      else{
+        nextState={
+          ...state,
+          checkedItem:[...state.checkedItem, action.value]
+        }
+      }
+      return nextState || state
+    case 'DELETE_ITEMS':
+      nextState={
+        ...state,
+        checkedItem:[],
+        setlist:state.setlist.filter( (item) => !state.checkedItem.includes(item) )
+      }
+      return nextState || state
   default:
     return state
   }
