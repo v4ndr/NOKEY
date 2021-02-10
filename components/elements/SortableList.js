@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import {Dimensions, StyleSheet, ScrollView, View, Animated, Button} from 'react-native'
+import {Dimensions, StyleSheet, ScrollView, View } from 'react-native'
 import {DragSortableView} from 'react-native-drag-sort'
-import {connect, useSelector} from 'react-redux'
+import {connect} from 'react-redux'
 import {ListItem} from 'react-native-elements'
 import {Icon} from 'react-native-elements'
 import songs from '../../data/songs.json'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const {width} = Dimensions.get('window')
 const parentWidth = width
@@ -20,58 +20,7 @@ class SortableList extends Component{
 
         this.state = {
             scrollEnabled: true,
-            animWidth: new Animated.Value(0),
         }
-    }
-    componentDidMount() {
-        this.props.nav.setOptions({headerRight:()=>{
-            return(
-            <Button
-                title='Modifier'
-                onPress={()=>this.toggleEdit()}
-                />
-            )
-        }})
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.editMode !== prevProps.editMode && !this.props.editMode) {
-            Animated.timing(this.state.animWidth, {toValue:0, duration: 500, useNativeDriver:false}).start()
-            this.props.nav.setOptions({headerRight:()=>{
-                return(
-                    <Button
-                        title='Modifier'
-                        onPress={()=>this.toggleEdit()}
-                        />
-                    )
-            }})
-        }
-    }
-    
-    toggleEdit() {
-        if(!this.props.editMode){
-            Animated.timing(this.state.animWidth, {toValue:30, duration: 500, useNativeDriver:false}).start()
-            this.props.nav.setOptions({headerRight:()=>{
-                return(
-                    <Button
-                        title='Annuler'
-                        onPress={()=>this.toggleEdit()}
-                        />
-                    )
-            }})
-        }
-        else{
-            Animated.timing(this.state.animWidth, {toValue:0, duration: 500, useNativeDriver:false}).start()
-            this.props.nav.setOptions({headerRight:()=>{
-                return(
-                    <Button
-                        title='Modifier'
-                        onPress={()=>this.toggleEdit()}
-                        />
-                    )
-            }})
-        }
-        this.props.dispatch({type:"TOGGLE_EDITMODE"})
     }
 
     displayCheck(item) {
@@ -98,9 +47,7 @@ class SortableList extends Component{
     }
 
     checkItem(item) {
-        if(this.props.editMode){
             this.props.dispatch({type: 'TOGGLE_CHECK_ITEM', value: item})
-        }
     }
 
     render() {
@@ -141,19 +88,15 @@ class SortableList extends Component{
                     }}
                     renderItem={(item)=>{
                         return(
-                        <ListItem style={styles.children} button bottomDivider>
-                            <ListItem.Content style={styles.content}>
-                                <Animated.View style={{width: this.state.animWidth}}>
-                                    <TouchableWithoutFeedback>
-                                        {this.displayCheck(item)}
-                                    </TouchableWithoutFeedback>
-                                </Animated.View>
-                                <ListItem.Title style={styles.title}>{songs.find(song => song.id === item).title}</ListItem.Title>
-                            </ListItem.Content>
-                            <Animated.View style={{width: this.state.animWidth}}>
+                            <TouchableOpacity activeOpacity={0.7} underlayColor='white'>
+                            <ListItem style={styles.children} button bottomDivider>
+                                <ListItem.Content style={styles.content}>
+                                    {this.displayCheck(item)}
+                                    <ListItem.Title style={styles.title}>{songs.find(song => song.id === item).title}</ListItem.Title>
+                                </ListItem.Content>
                                 <ListItem.Chevron name='bars' type='font-awesome-5'/>
-                            </Animated.View>
-                        </ListItem>
+                            </ListItem>
+                            </TouchableOpacity>
                         )
                     }}
                 />

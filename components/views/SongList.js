@@ -5,28 +5,14 @@ import songs from '../../data/songs.json'
 import {useDispatch, useSelector} from 'react-redux'
 import { FlatList } from 'react-native-gesture-handler'
 
-
-const DisplayChevron = (props) => {
-    if (props.setlist.includes(props.id)){
-        return (
-            <ListItem.Chevron name='check' type='font-awesome-5' color='#A3E4D7'/>
-        )
-    }
-    else{
-        return (
-            <></>
-        )
-    }
-}
 const renderItem = ({item}, setlist, dispatch) => {
     return(
-        <ListItem button bottomDivider onPress={()=>{dispatch({type:'TOGGLE_SETLIST', value:item.id})}}>
+        <ListItem activeOpacity={1} underlayColor={null} button bottomDivider containerStyle={[setlist.includes(item.id) && {backgroundColor:'rgba(70,212,211,0.05)'}]} onPress={()=>{dispatch({type:'TOGGLE_SETLIST', value:item.id})}}>
             <ListItem.Content style={styles.item}>
                 <Text style={styles.itemText}>
                     {item.title}
                 </Text>
             </ListItem.Content>
-            <DisplayChevron setlist={setlist} id={item.id}/>
         </ListItem>
     )
 }

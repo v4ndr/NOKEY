@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Button } from 'react-native'
+import { View} from 'react-native'
 import {StyleSheet} from 'react-native'
 import {useNavigation, useFocusEffect} from '@react-navigation/native'
 import {useDispatch} from 'react-redux'
@@ -11,8 +11,9 @@ const Setlist = () => {
     useFocusEffect(
         React.useCallback(
             ()=>{
+                dispatch({type:'TOGGLE_EDITMODE'})
                 return () => {
-                    dispatch({type:'DISABLE_EDITMODE'})
+                    dispatch({type:'TOGGLE_EDITMODE'})
                 }
             },[]
         )

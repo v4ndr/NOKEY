@@ -30,12 +30,6 @@ function setlistReducer(state = initialState, action) {
         editMode:!state.editMode,
       }
       return nextState || state
-      case 'DISABLE_EDITMODE':
-        nextState={
-          ...state,
-          editMode:false,
-        }
-        return nextState || state
     case 'TOGGLE_CHECK_ITEM':
       const itemIndex = state.checkedItem.findIndex(item => item === action.value)
       if(itemIndex !== -1){

@@ -23,7 +23,6 @@ const PlayButton = () => {
                 icon="delete"
                 onPress={() => {
                     dispatch({type: 'DELETE_ITEMS'})
-                    dispatch({type:'DISABLE_EDITMODE'})
             }}
             />
         )
