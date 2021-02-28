@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {createStackNavigator} from '@react-navigation/stack'
-import {Button} from 'react-native'
+import {TouchableOpacity, Text} from 'react-native'
 import SongList from '../components/views/SongList'
 import Setlist from '../components/views/Setlist'
 import * as RootNavigation from './RootNavigation'
@@ -24,10 +24,12 @@ class NestedStack extends React.Component {
               title:'NOKEY',
               headerRight:()=>{
                 return(
-                <Button
-                  title={"Setlist ("+this.props.setlist.length+")"}
-                  onPress={()=>{RootNavigation.navigate('setlist')}}
-                />
+                  <TouchableOpacity
+                    style={{padding:10, alignItems:'center', backgroundColor:'white'}}
+                    onPress={()=>{RootNavigation.navigate('setlist')}}
+                  >
+                    <Text style={{color:'#007AFF', fontSize:18}}>{"Setlist ("+this.props.setlist.length+")"}</Text>
+                  </TouchableOpacity>
                 )
               }
               }}/>

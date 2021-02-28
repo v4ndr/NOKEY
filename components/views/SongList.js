@@ -6,6 +6,11 @@ import {SwipeListView} from 'react-native-swipe-list-view'
 import {useDispatch, useSelector} from 'react-redux'
 import {Icon} from 'react-native-elements'
 
+let toggle = []
+for(var i=0; i<songs.length;i++){
+    toggle.push(false)
+}
+
 const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
         rowMap[rowKey].closeRow();
@@ -39,23 +44,21 @@ const Actions = (props) => {
     return(
         <View style={[
             styles.btn, 
-            props.setlist.includes(props.id) && {backgroundColor:'lightgreen'},
-            props.rightActionActivated && props.setlist.includes(props.id) && {backgroundColor:'#ffef61'},
-            props.rightActionActivated && !props.setlist.includes(props.id) && {backgroundColor:'lightgreen'},
-            
+            toggle[props.id-1] && {backgroundColor:'lightgreen'},
+            !toggle[props.id-1] && {backgroundColor:'#ffef61'},
             ]}>
-            <Text style={styles.btnText}>Ajouter</Text>
+                <Icon
+                    name={toggle[props.id-1] ? 'check-circle' : 'circle'}
+                    type="font-awesome-5"
+                    size={20}
+                />
         </View>
     )
+    
 }
 const renderHiddenItem = (item, romMap, setlist) => {
     return (
         <Actions id={item.id} setlist={setlist}/>
-        // <ListItem bottomDivider containerStyle={styles.hiddenRow}>
-        //     <ListItem.Content style={styles.btn}>
-        //             <BtnIcon id={item.id} setlist={setlist}/>
-        //     </ListItem.Content>
-        // </ListItem>
     )
 }
 
@@ -109,7 +112,9 @@ const SongList = () => {
                 rightActivationValue={-80}
                 rightActionValue={0}
                 onRightAction={(rowKey)=>dispatch({type:'TOGGLE_SETLIST', value:parseInt(rowKey)})}
-                onRightActionStatusChange={()=>{}}
+                onRightActionStatusChange={({key, isActivated})=>{
+                    isActivated ? toggle[key-1] = !toggle[key-1] : null
+                }}
             />
         </View>
     );

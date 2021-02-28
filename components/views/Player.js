@@ -5,17 +5,29 @@ import CloseButton from '../elements/CloseButton'
 import {useSelector} from 'react-redux'
 import songs from '../../data/songs.json'
 
+const generateChart = (id, setlist) => {
+    return songs.find(song=>song.id === setlist[id]).chart.map((item, index)=>{
+        return(
+            <>
+            <Text style={styles.sectionTitle} key={index}>{item[0]}</Text>
+            <Text style={styles.chart}>{item[1]}</Text>
+            </>
+        )
+    })
+}
+
 const generateSwiper = () => {
     const setlist = useSelector(state=>state.setlist)
     let slides= []
     for (let i=0; i < setlist.length ; i++){
+
         slides.push(
             <View key={i} style={styles.slide}>
                 <View style={styles.slideTitle}>
                     <Text style={styles.title}>{songs.find(song => song.id === setlist[i]).title}</Text>
                 </View>
                 <View style={styles.slideChart}>
-                    <Text style={styles.chart}>{songs.find(song => song.id === setlist[i]).chart}</Text>
+                    {generateChart(i, setlist)}
                 </View>
                 <View style={styles.slideSup}/>
             </View>
@@ -68,9 +80,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign:'center'
     },
+    sectionTitle: {
+        color: 'gray',
+        fontSize: 30,
+        textTransform:'uppercase'
+    },
     chart: {
         color: '#fff',
         fontSize: 30,
+        textAlign:'center'
     }
 })
 

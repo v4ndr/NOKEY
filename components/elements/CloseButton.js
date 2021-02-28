@@ -21,8 +21,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 5,
         right:0,
-        top: 15,
-        backgroundColor:"rgba(0,0,0,0)"
+        top: 20,
+        backgroundColor:"rgba(0,0,0,0)",
+        elevation:0
     }
 })
 
